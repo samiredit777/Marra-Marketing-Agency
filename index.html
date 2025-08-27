@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marra Marketing Agency</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at bottom right, #ff8000, #000000);
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-top: 50px;
+      animation: fadeInDown 2s ease-out;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.2rem;
+      opacity: 0.8;
+      animation: fadeIn 3s ease-out;
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      animation: fadeInUp 3s ease-out;
+    }
+
+    .links a {
+      text-decoration: none;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #ff8000, #ff5100);
+      color: white;
+      border-radius: 30px;
+      font-weight: bold;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px #ff8000aa;
+    }
+
+    .links a:hover {
+      background: linear-gradient(45deg, #ff5100, #ff8000);
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #ff8000;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Canvas particles */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Marra Marketing Agency</h1>
+  <p>We bring your brand to the next level</p>
+
+  <div class="links">
+    <a href="https://t.me/MarraAgency" target="_blank">Telegram</a>
+    <a href="https://www.instagram.com/marra.agency?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
+  </div>
+
+  <canvas id="particles"></canvas>
+
+  <script>
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particlesArray = [];
+    const numberOfParticles = 120;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 1;
+        this.speedY = (Math.random() - 0.5) * 1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = "#ff8000";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    function init() {
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        const p = particlesArray[i];
+        p.update();
+        p.draw();
+
+        for (let j = i; j < particlesArray.length; j++) {
+          const dx = p.x - particlesArray[j].x;
+          const dy = p.y - particlesArray[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(255,128,0,0.4)";
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+  </script>
+</body>
+</html>
